@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>sheffield.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>sheffield.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Tkinter</span> <span class="kn">import</span> <span class="n">Tk</span>
+<span class="kn">from</span> <span class="nn">tkFileDialog</span> <span class="kn">import</span> <span class="n">askopenfilename</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <h3><span id="restructuring-the-map-as-a-dictionary" href="restructuring-the-map-as-a-dictionary"> Restructuring the map as a dictionary </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">build_dict</span><span class="p">(</span><span class="n">roads</span><span class="p">,</span><span class="n">finish</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <pre><code>builds a dictionary containing the nodes as keys and
+the list of roads connected to each node as values
+
+Input:
+
+1. roads - a list of lists (each consisting of two values)
+- the list of roads in the map
+2. finish - a character representing a letter in the Latin
+alphabet - the node that represents the destination. This
+node will not be included as a key in the dictionary.
+
+Output:
+
+- d - dictionary -a dictionary representing the map.
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">road</span> <span class="ow">in</span> <span class="n">roads</span><span class="p">:</span>
+        <span class="n">nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">road</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">road</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">nodes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">finish</span><span class="p">)</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">road</span> <span class="ow">in</span> <span class="n">roads</span><span class="p">:</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">road</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">node</span><span class="p">):</span>
+                <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">road</span><span class="p">)</span>
+            <span class="k">elif</span><span class="p">(</span><span class="n">road</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">node</span><span class="p">):</span>
+                
+                <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">road</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c1">#append the road in reverse order so the current node would be first</span>
+                
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">node</span><span class="p">:</span><span class="n">l</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">d</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <h3><span id="building-a-path" href="building-a-path"> Building a path </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">add_next</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="n">d</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <pre><code>Adds the next node on a path. Returns the list of all
+possible paths as a list.
+
+Input:
+
+1. path - list of characters - a list of nodes with
+path[0] = the start node, to which a node or nodes will
+be added.
+2. d - dictinary - the dictionary representing the map.
+
+Output:
+
+- paths - list of lists - the list of possible paths
+that can be constructed from path by adding all possible
+next nodes.
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    
+    <span class="n">paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">d</span><span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]:</span>
+        <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+            <span class="n">paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="o">+</span><span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">paths</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <h3><span id="checking-the-end-of-treatment" href="checking-the-end-of-treatment"> Checking the end of treatment </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">check_completed</span><span class="p">(</span><span class="n">finish</span><span class="p">,</span><span class="n">paths</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <pre><code>Checks if all paths have reached the destination node.
+
+Input:
+
+1. finish - character - the destination node.
+2. paths - list of lists - the list of paths under
+construction.
+
+Output:
+
+- a boolean - with the value True if the destination node
+is contained in every path in paths, and False otherwise.
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">finish</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">True</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <h3><span id="calculating-the-pseudo-measure-of-a-path" href="calculating-the-pseudo-measure-of-a-path"> Calculating the Pseudo-measure of a path </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">pseudo_measure</span><span class="p">(</span><span class="n">path</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <pre><code>Returns the number of villages and towns on a path (not
+including the start and destination nodes) as a tuple.
+The pseudo-measure will be used to differentiate the
+paths whose cost will undoubtedly be too large to be
+included in the final list of paths, thus reducing the
+time and space complexity considerably, while fulfilling
+the aim of our program.
+A larger pseudo-measure for a given path implies that,
+regardless of the number of gold bars, the path will
+always be more or, at best, equally costly compared to
+other paths on the list.
+
+Input:
+
+- path - list of characters - a list of nodes which
+starts at the start node and ends at the destination
+node, and represents a path on the map.
+
+Output:
+
+- (villages,towns) - (integer,integer) - a tuple
+representing the number of villages and towns on the
+path, without including the start and destination
+nodes.
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    
+    <span class="n">villages</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">towns</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">path</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">isupper</span><span class="p">():</span>
+            <span class="n">towns</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">villages</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="n">villages</span><span class="p">,</span><span class="n">towns</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <h3><span id="building-the-list-of-all-relevant-paths" href="building-the-list-of-all-relevant-paths"> Building the list of all relevant paths </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">build_paths</span><span class="p">(</span><span class="n">finish</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">paths</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <pre><code>Builds the list of all relevant paths from the map.
+A "relevant path" is defined as a path whose
+pseudo-measure is not larger than any other path in
+the list, indicating that it has the potential to
+be the least costly path on the map, depending on
+the number of gold bars.
+
+Incomplete paths are systematically removed, as
+well as paths whose pseudo-measure is definitely
+higher.
+
+The function calls itself recursively until the
+condition "done" is fulfilled, i.e. every path
+in paths has reached the destination.
+
+Input:
+
+1. finish - character - the destination node.
+2. d - dictionary - the dictionary representing
+the map.
+3. paths - list of lists - the list of paths in
+the map which has to be filled.
+
+Output:
+
+- paths - list of lists - the list of paths in
+the map.
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    
+    <span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">finish</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">path</span><span class="p">):</span>
+            <span class="n">paths</span><span class="o">+=</span><span class="n">add_next</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+            <span class="n">paths</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>   <span class="c1">#paths that lead nowhere will be removed automatically as well</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">lane</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">lane</span><span class="o">!=</span><span class="n">path</span> <span class="ow">and</span> <span class="n">finish</span> <span class="ow">in</span> <span class="n">lane</span><span class="p">):</span>
+                    <span class="k">if</span><span class="p">(</span><span class="n">compare</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span><span class="n">path</span><span class="p">)</span><span class="o">==-</span><span class="mi">1</span><span class="p">):</span>
+                        <span class="n">paths</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                    <span class="k">elif</span><span class="p">(</span><span class="n">compare</span><span class="p">(</span><span class="n">lane</span><span class="p">,</span><span class="n">path</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+                        <span class="n">paths</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">lane</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>  
+        <span class="n">paths</span> <span class="o">=</span> <span class="n">build_paths</span><span class="p">(</span><span class="n">finish</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">paths</span><span class="p">)</span> <span class="c1">#recursive call</span>
+    <span class="k">return</span> <span class="n">paths</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <h3><span id="getting-the-previous-gold-bar-count" href="getting-the-previous-gold-bar-count"> Getting the previous gold bar count </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">get_total</span><span class="p">(</span><span class="n">value</span><span class="p">,</span><span class="n">cost</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <pre><code>Gets total number of gold bars before taxation
+at a town (for a village the calculation is
+straightforward).
+Calls itself recursively until no more cost
+can be added.(new_cost == 0)
+
+Input:
+
+1. value - an integer - the gold bar count after
+taxation or from a previous iteration of the function.
+2. cost - an integer - the amount of tax from a
+previous iteration of the function, calculated as the
+value/20 rounded up. It's initialized to zero when the
+function is called for the first time.
+
+Output:
+
+- an integer - the total number of gold bars before
+taxation, calculated as the sum of value and the
+final cost(amount of taxation).
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">a</span> <span class="o">=</span> <span class="n">value</span><span class="o">//</span><span class="mi">20</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">value</span><span class="o">%</span><span class="mi">20</span>
+    <span class="n">new_cost</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">cost</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">b</span><span class="o">!=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">new_cost</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">new_cost</span><span class="o">!=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">get_total</span><span class="p">(</span><span class="n">value</span><span class="o">+</span><span class="n">new_cost</span><span class="p">,</span><span class="n">new_cost</span><span class="o">+</span><span class="n">cost</span><span class="p">)</span> <span class="c1">#recursive call</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">+</span><span class="n">new_cost</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <h3><span id="comparing-the-pseudo-measures-of-two-paths" href="comparing-the-pseudo-measures-of-two-paths"> Comparing the pseudo-measures of two paths </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <pre><code>Compares two paths by pseudo-measure and returns 1
+if p1 is more costly than p2, -1 if p1 is less costly
+than p2 and 0 if it's undecided.
+The comparison rules were inferred from mathematical
+formulas that are shown and explained in the document
+"Mathematics of Sheffield".
+
+Input:
+
+1. p1 - a path
+2. p2 - another path
+
+Output:
+
+- an integer - whose value = 1 if p1 &gt; p2 ,
+-1 if p1 &lt; p2 and 0 if neither can be definitely
+shown to be larger or smaller in terms of cost.
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    
+    <span class="n">m</span><span class="p">,</span><span class="n">n</span> <span class="o">=</span> <span class="n">pseudo_measure</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+    <span class="n">mprime</span><span class="p">,</span><span class="n">nprime</span> <span class="o">=</span> <span class="n">pseudo_measure</span><span class="p">(</span><span class="n">p2</span><span class="p">)</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">m</span><span class="o">&lt;=</span><span class="n">mprime</span> <span class="ow">and</span> <span class="n">n</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">elif</span><span class="p">(</span><span class="n">mprime</span><span class="o">&lt;</span><span class="n">m</span> <span class="ow">and</span> <span class="n">nprime</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">elif</span><span class="p">(</span><span class="n">m</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">mprime</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">&lt;=</span><span class="n">nprime</span><span class="p">):</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">elif</span><span class="p">(</span><span class="n">m</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">n</span><span class="o">&lt;=</span><span class="n">nprime</span> <span class="ow">and</span> <span class="mi">18</span><span class="o">*</span><span class="n">mprime</span><span class="o">&gt;=</span><span class="mi">19</span><span class="o">*</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>        
+    <span class="k">elif</span><span class="p">(</span><span class="n">mprime</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">nprime</span><span class="o">&lt;=</span><span class="n">n</span> <span class="ow">and</span> <span class="mi">18</span><span class="o">*</span><span class="n">m</span><span class="o">&gt;=</span><span class="mi">19</span><span class="o">*</span><span class="n">nprime</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">elif</span><span class="p">(</span><span class="n">mprime</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">m</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">&lt;</span><span class="n">nprime</span><span class="p">):</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">elif</span><span class="p">(</span><span class="n">nprime</span><span class="o">&lt;</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">elif</span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">nprime</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">m</span><span class="o">&lt;=</span><span class="n">mprime</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">mprime</span><span class="o">-</span><span class="n">m</span><span class="o">&gt;=</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="n">mprime</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">20</span><span class="p">):</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">elif</span><span class="p">(</span><span class="n">m</span><span class="o">&gt;=</span><span class="mi">19</span> <span class="ow">and</span> <span class="n">mprime</span><span class="o">-</span><span class="n">m</span><span class="o">&lt;=</span><span class="p">(</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">20</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">elif</span><span class="p">(</span><span class="n">m</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">n</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">mprime</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">nprime</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">elif</span><span class="p">(</span><span class="n">m</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">n</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">mprime</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">nprime</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <h3><span id="calculating-the-lowest-number-of-gold-bars" href="calculating-the-lowest-number-of-gold-bars"> Calculating the lowest number of gold bars </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">cheapest</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span><span class="n">gold_bars</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <pre><code>Returns the total number of gold bars needed at the
+starting position, if the path with the lowest cost
+is taken.
+Checks every path in paths, calculates its gold bar
+total and returns the minimum.
+
+lowest = 1535
+the above line would cause trouble if the number of
+final gold bars exceeded 1000 and/or the number of
+towns and villages was more than 26 each.
+A detailed explanation for how the exact value was
+obtained is in the document "Mathematics of Sheffield"
+
+Input:
+
+1. paths - list of lists - list of relevant paths on
+the map
+2. gold_bars - integer - number of gold bars at the
+destination.
+
+Output:
+
+- lowest - integer - minimum number of gold bars needed
+to reach the destination.
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    
+    <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">gold_bars</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lowest</span> <span class="o">=</span> <span class="mi">1535</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="n">gold_bars</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">isupper</span><span class="p">()):</span>
+                    <span class="n">total</span> <span class="o">=</span> <span class="n">get_total</span><span class="p">(</span><span class="n">total</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">total</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">total</span><span class="o">&lt;</span><span class="n">lowest</span><span class="p">):</span>
+                <span class="n">lowest</span> <span class="o">=</span> <span class="n">total</span>
+                    
+        <span class="k">return</span> <span class="n">lowest</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <h3><span id="main-section-of-the-program" href="main-section-of-the-program"> Main section of the program </span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">if</span><span class="p">(</span><span class="vm">__name__</span><span class="o">==</span><span class="s1">&#39;__main__&#39;</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <pre><code>In this section, the program will get the delivery
+file needed for treatment, using Tkinter so the user
+can browse for the file they want.
+It will then parse the file and print error or
+warning messages when its structure does not follow
+the expectation.
+
+
+If everything is okay, the program will get the
+values of:
+
+1. delivery_file - string - path of the file to
+be treated.
+2. case_number - integer - this will be incremented
+with each new case.
+3. road_count - integer - the number of roads in
+the map. This variable is redundant, and will only
+be useful to check if the file structure is correct,
+so the user would get the result they likely expect.
+4. roads - a list of lists each having two values,
+each representing a character of the Latin alphabet
+- list of roads on the map. Each road is a connection
+between two nodes, and each node can be a towns or a
+village.
+5. gold_bars - integer - the number of gold bars to be
+delivered to the destination
+6. start and finish - two characters - these are
+retrieved from lines with two character values
+
+Additional variables used:
+
+7. d - dictionary - a dictionary representing the
+map, which is calculated using build_dict function
+8. treated - boolean - set to False when a new
+treatment starts, and to True when it's finished
+without incident. If there's a file stucture problem,
+it is used to ensure that we do not proceed with the
+next case until we deal with potential errors and the
+previous case is done.
+9. paths - list of lists - will contain the relevant
+paths in the map.
+
+
+-- If an error found, the program will print the
+error message, and exit. Only the results of cases
+treated until the error line will be shown on the
+console.
+The user has to fix the problem, and then launch the
+program once again to obtain the rest of the results.
+
+--- List of errors:
+
+- road_count is negative or equal to zero.
+- road_count is not an integer.
+- a general error when adding a new value to the
+list of roads.
+- a node (town or village) is not represented by a
+letter from the Latin alphabet.
+- a road lists the same node as its start and finish,
+e.g. A A or b b.
+- the number of gold bars is negative or zero.
+- the number of gold bars exceeds 1000.
+- the value entered for gold_bar is not an integer.
+- the number of space-saparated values on a given
+line is either 0 or larger then 3.
+- general error if the function call of build_dict
+or build_paths fails or generates an error for an
+unexpected reason.
+
+-- A warning message is shown if the structure of
+the file is incorrect, but the problem would not affect
+the treatment of the cases. For example: if the road
+count is missing, the program can still calculate it
+by counting the number of listed roads.
+-- If the -1 at the end of file is not included,
+the program will not do anything, since its presence
+or lack thereof does not affect its execution.
+
+
+--- List of warnings:
+
+- Road_count is probably missing, but otherwise all data
+can be retrieved and treated.
+- The road_count (intended number of roads) listed does
+not match the number of roads retrieved from the file
+for a given case. The program will use the length of the
+road list as the actual road count.
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    
+    <span class="n">case_number</span>  <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">treated</span> <span class="o">=</span> <span class="bp">False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>to avoid opening the main window --&gt;</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">Tk</span><span class="p">()</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span> 
+    <span class="n">delivery_file</span> <span class="o">=</span> <span class="n">askopenfilename</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <p>reading the file, loading the input for treatment --&gt;</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">delivery_file</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">delivery</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">delivery</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="s2">&quot;-1&quot;</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">road_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="k">if</span><span class="p">(</span><span class="n">road_count</span><span class="o">&lt;=</span><span class="mi">0</span><span class="p">):</span>
+                            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Delivery file structure is incorrect at line {}. The number of roads should not be negative or zero!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                            <span class="k">break</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span><span class="n">e</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Delivery file structure is incorrect at line {}. Road count should be an integer value!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                        <span class="k">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                        <span class="k">break</span>
+                    <span class="n">case_number</span><span class="o">+=</span><span class="mi">1</span>
+                    <span class="n">roads</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">treated</span> <span class="o">=</span>  <span class="bp">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">elif</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span><span class="p">):</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">treated</span><span class="p">):</span>
+                    <span class="n">road_count</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">case_number</span><span class="o">+=</span><span class="mi">1</span>
+                    <span class="n">treated</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Warning: Delivery file structure is incorrect at line {}. Road count for case {} is probably missing!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">case_number</span><span class="p">))</span>
+                <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span> <span class="ow">and</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">())):</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Delivery file structure is incorrect at line {}. Towns and villages should be represented with letters!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="k">break</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Delivery file structure is incorrect at line {}. A road should not start and end at the same node!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="k">break</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">roads</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span><span class="n">e</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Delivery file structure is incorrect at line {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="k">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                    <span class="k">break</span>
+            <span class="k">elif</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">gold_bars</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">if</span><span class="p">(</span><span class="n">gold_bars</span><span class="o">&lt;=</span><span class="mi">0</span><span class="p">):</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Delivery file structure is incorrect at line {}. The number of gold bars should not be negative or zero!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                        <span class="k">break</span>
+                    <span class="k">elif</span><span class="p">(</span><span class="n">gold_bars</span><span class="o">&gt;</span><span class="mi">1000</span><span class="p">):</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;The use of a gold bars number exceeding 1000 is not accepted!&quot;</span><span class="p">)</span>
+                        <span class="k">break</span>
+                    
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span><span class="n">e</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Delivery file structure is incorrect at line {}! The number of gold bars must be an integer!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="k">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                    <span class="k">break</span>
+                <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span> <span class="ow">and</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">())):</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Delivery file structure is incorrect at line {}. Towns and villages should be represented with letters!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="k">break</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">road_count</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">roads</span><span class="p">)):</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;case {}: Warning! The declared number of roads does not </span><span class="se">\n</span><span class="s2">match the road list count! {} vs {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">case_number</span><span class="p">,</span><span class="n">road_count</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">roads</span><span class="p">)))</span>
+
+                <span class="k">try</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>a direct path between the starting and finishing
+positions is always the best --&gt;</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                    <span class="k">if</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="ow">in</span> <span class="n">roads</span> <span class="ow">or</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="ow">in</span> <span class="n">roads</span><span class="p">):</span> 
+                        <span class="n">paths</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]]]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">d</span> <span class="o">=</span> <span class="n">build_dict</span><span class="p">(</span><span class="n">roads</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                        <span class="n">paths</span> <span class="o">=</span> <span class="n">build_paths</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+                
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;case {}: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">case_number</span><span class="p">,</span><span class="n">cheapest</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span><span class="n">gold_bars</span><span class="p">)))</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span><span class="n">e</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Unexpected behavior at line {}. Please check the structure of the file!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="k">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="n">roads</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">treated</span> <span class="o">=</span> <span class="bp">True</span>
+                
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Delivery file structure is incorrect at line {}. Too many values or too few!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                <span class="k">break</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
