@@ -16,3 +16,10 @@ In order to understand our problem, we have to explicitly lay down all the basic
 5.	The number of gold bars cannot exceed 1000.
 6.	The problem must always have a solution, that is, there must always be a path from source to destination.
 7.	A path must be non-cyclic (source and destination are not  the same node) and non-repetitive (does not pass through the same node twice), otherwise it would be by default a wasteful path.
+
+Files:
+sheffield.py : main program
+sheffield_test.py : unit test program, still under development
+delivery.txt : file containing test cases
+mathematics of sheffield.pdf : mathematical formulation of the problem
+docs : contains Pycco-generated documentation (html+css)
