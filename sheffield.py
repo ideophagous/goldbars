@@ -325,6 +325,52 @@ def cheapest(paths,gold_bars):
                     
         return lowest
 
+
+def random_pathbuilder(m,n):
+    """
+    Returns a path containing m
+    villages and n towns in random order.
+    This is a function whose purpose is to
+    help test the core functions, which
+    perform the actual calculations.
+
+    Input:
+
+    1. m: Integer. Number of villages.
+    2. n: Integer. Number of towns.
+
+    Output:
+
+    - path: list of alphabetic characters.
+    The characters have random case (upper
+    for towns and lower for towns), while
+    respecting the maximum values set by n
+    and m respectively.
+    """
+    
+    v = 0
+    t = 0
+    path = []
+    for i in range(m+n):
+        r = randint(0,1) #generating 0 or 1 randomly
+        if(r==0):
+            path.append(chr(v+97))
+            v+=1
+        else:
+            path.append(chr(t+65))
+            t+=1
+        if(v==m or v==26):
+            while t<n:
+                path.append(chr(t+65))
+                t+=1
+            break
+        elif(t==n or t==26):
+            while v<m:
+                path.append(chr(v+97))
+                v+=1
+            break
+    return path
+
 # === Main section of the program ===
 if(__name__=='__main__'):
 
