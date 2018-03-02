@@ -3,30 +3,33 @@ from tkFileDialog import askopenfilename
 
 
 # === Restructuring the map as a dictionary ===
-def build_dict(roads,finish):
+def build_map_dictionary(roads,destination_node):
     
     """
     builds a dictionary containing the nodes as keys and
-    the list of roads connected to each node as values
+    the list of roads connected to each node as values.
     
     Input:
     
     1. roads - a list of lists (each consisting of two values)
     - the list of roads in the map
-    2. finish - a character representing a letter in the Latin
-    alphabet - the node that represents the destination. This
-    node will not be included as a key in the dictionary.
+    2. destination_node - a character representing a letter in
+    the Latin alphabet - the node that represents the
+    destination. This node will not be included as a key in
+    the dictionary.
     
     Output:
 
     - d - dictionary -a dictionary representing the map.
     """
     
-    nodes = set()
+    nodes = set() #initializing the list of nodes as an empty set
+    #a set structure is chosen initially to avoid repeating any
+    #node twice
     for road in roads:
         nodes.add(road[0])
         nodes.add(road[1])
-    nodes.remove(finish)
+    nodes.remove(destination_node)
     nodes = list(nodes)
     d = {}
     for node in nodes:
@@ -36,7 +39,8 @@ def build_dict(roads,finish):
                 l.append(road)
             elif(road[1]==node):
                 
-                l.append(road[::-1]) #append the road in reverse order so the current node would be first
+                l.append(road[::-1]) #append the road in reverse
+                #order so the current node would be first
                 
         d.update({node:l})
     return d
@@ -69,14 +73,14 @@ def add_next(path,d):
     return paths
 
 # === Checking the end of treatment ===
-def check_completed(finish,paths):
+def check_completed(destination_node,paths):
 
     """
     Checks if all paths have reached the destination node.
 
     Input:
 
-    1. finish - character - the destination node.
+    1. destination_node - character - the destination node.
     2. paths - list of lists - the list of paths under
     construction.
 
@@ -87,7 +91,7 @@ def check_completed(finish,paths):
     """
     
     for path in paths:
-        if(finish not in path):
+        if(destination_node not in path):
             return False
     return True
 
@@ -132,7 +136,7 @@ def pseudo_measure(path):
     
         
 # === Building the list of all relevant paths ===
-def build_paths(finish,d,paths):
+def build_paths(destination_node,d,paths):
     
     """
     Builds the list of all relevant paths from the map.
@@ -152,7 +156,8 @@ def build_paths(finish,d,paths):
     
     Input:
 
-    1. finish - character - the destination node.
+    1. destination_node - character - the destination
+    node.
     2. d - dictionary - the dictionary representing
     the map.
     3. paths - list of lists - the list of paths in
@@ -166,20 +171,20 @@ def build_paths(finish,d,paths):
     
     done = True
     for path in paths:
-        if(finish not in path):
+        if(destination_node not in path):
             paths+=add_next(path,d)
             paths.remove(path)   #paths that lead nowhere will be removed automatically as well
             done = False
         else:
             for lane in paths:
-                if(lane!=path and finish in lane):
+                if(lane!=path and destination_node in lane):
                     if(compare(lane,path)==-1):
                         paths.remove(path)
                     elif(compare(lane,path)==1):
                         paths.remove(lane)
     
     if not done:  
-        paths = build_paths(finish,d,paths) #recursive call
+        paths = build_paths(destination_node,d,paths) #recursive call
     return paths
 
 # === Getting the previous gold bar count ===
@@ -348,15 +353,16 @@ if(__name__=='__main__'):
     - list of roads on the map. Each road is a connection
     between two nodes, and each node can be a towns or a
     village.
-    5. gold_bars - integer - the number of gold bars to be
-    delivered to the destination
-    6. start and finish - two characters - these are
-    retrieved from lines with two character values
+    5. gold_bars - integer - the number of gold bars to
+    be delivered to the destination.
+    6. start and destination_node - two characters -
+    these are retrieved from lines with two character values.
 
     Additional variables used:
 
     7. d - dictionary - a dictionary representing the
-    map, which is calculated using build_dict function
+    map, which is calculated using build_map_dictionary
+    function.
     8. treated - boolean - set to False when a new
     treatment starts, and to True when it's finished
     without incident. If there's a file stucture problem,
@@ -382,16 +388,16 @@ if(__name__=='__main__'):
     list of roads.
     - a node (town or village) is not represented by a
     letter from the Latin alphabet.
-    - a road lists the same node as its start and finish,
-    e.g. A A or b b.
+    - a road lists the same node as its start and
+    destination_node, e.g. A A or b b.
     - the number of gold bars is negative or zero.
     - the number of gold bars exceeds 1000.
     - the value entered for gold_bar is not an integer.
     - the number of space-saparated values on a given
     line is either 0 or larger then 3.
-    - general error if the function call of build_dict
-    or build_paths fails or generates an error for an
-    unexpected reason.
+    - general error if the function call of
+    build_map_dictionary or build_paths fails or
+    generates an error for an unexpected reason.
     
     -- A warning message is shown if the structure of
     the file is incorrect, but the problem would not affect
@@ -484,7 +490,7 @@ if(__name__=='__main__'):
                     if([x[1],x[2]] in roads or [x[2],x[1]] in roads): 
                         paths = [[x[1],x[2]]]
                     else:
-                        d = build_dict(roads,x[2])
+                        d = build_map_dictionary(roads,x[2])
                         paths = build_paths(x[2],d,d[x[1]])
                 
                     print("case {}: {}".format(case_number,cheapest(paths,gold_bars)))
