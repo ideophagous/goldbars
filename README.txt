@@ -1,4 +1,4 @@
-Developed by Mounir AFIFI for a job interview
+Developed by Maurusian
 Python version: 2.7.12
 
 Brief Summary and Motivation:
